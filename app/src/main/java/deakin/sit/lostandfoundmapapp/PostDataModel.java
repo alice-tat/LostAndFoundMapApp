@@ -1,5 +1,7 @@
 package deakin.sit.lostandfoundmapapp;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class PostDataModel {
     private int id;
     private String type;
@@ -8,16 +10,29 @@ public class PostDataModel {
     private String description;
     private String date;
     private String location;
+    private double latitude;
+    private double longitude;
 
     public PostDataModel() { }
 
-    public PostDataModel(String type, String name, String phone, String description, String date, String location) {
+//    public PostDataModel(String type, String name, String phone, String description, String date, String location) {
+//        this.type = type;
+//        this.name = name;
+//        this.phone = phone;
+//        this.description = description;
+//        this.date = date;
+//        this.location = location;
+//    }
+
+    public PostDataModel(String type, String name, String phone, String description, String date, String location, double latitude, double longitude) {
         this.type = type;
         this.name = name;
         this.phone = phone;
         this.description = description;
         this.date = date;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getId() {
@@ -74,5 +89,21 @@ public class PostDataModel {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

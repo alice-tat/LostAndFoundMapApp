@@ -63,7 +63,7 @@ public class CreateNewAdvertFragment extends Fragment implements OnMapReadyCallb
                 Toast.makeText(getContext(), "Input fields can not be empty", Toast.LENGTH_SHORT);
             } else {
                 // Add advert
-                dbHelper.addPost(new PostDataModel(selectedType, name, phone, description, date, location));
+//                dbHelper.addPost(new PostDataModel(selectedType, name, phone, description, date, location));
                 inputName.setText("");
                 inputPhone.setText("");
                 inputDescription.setText("");

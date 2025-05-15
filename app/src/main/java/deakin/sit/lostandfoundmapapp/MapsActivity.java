@@ -11,13 +11,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 import deakin.sit.lostandfoundmapapp.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    DatabaseHelper dbHelper;
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
 
+    private List<PostDataModel> postDataModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Get all saved location
+        dbHelper = new DatabaseHelper(this);
+        postDataModelList = dbHelper.getAllPosts();
     }
 
     /**
@@ -46,7 +54,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in sydney"));
+
+        // Mark all others
+        for (PostDataModel post : postDataModelList) {
+            LatLng lat = new LatLng(post.getLatitude(), post.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(lat).title(post.getName() + ": " + post.getLocation()));
+        }
     }
 }

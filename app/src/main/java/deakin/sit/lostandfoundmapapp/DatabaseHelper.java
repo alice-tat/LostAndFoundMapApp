@@ -22,6 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_DESCRIPTION = "description";
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_LOCATION = "location";
+    private static final String COLUMN_LATITUDE = "latitude";
+    private static final String COLUMN_LONGITUDE = "longitude";
 
     public DatabaseHelper(@Nullable Context context) {
         // super(context, name, factory, version);
@@ -37,7 +39,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_PHONE + " TEXT,"
                 + COLUMN_DESCRIPTION + " TEXT,"
                 + COLUMN_DATE + " TEXT,"
-                + COLUMN_LOCATION + " TEXT"
+                + COLUMN_LOCATION + " TEXT,"
+                + COLUMN_LATITUDE + " REAL,"
+                + COLUMN_LONGITUDE + " REAL"
                 + ")");
     }
 
@@ -57,6 +61,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DESCRIPTION, post.getDescription());
         values.put(COLUMN_DATE, post.getDate());
         values.put(COLUMN_LOCATION, post.getLocation());
+        values.put(COLUMN_LATITUDE, post.getLatitude());
+        values.put(COLUMN_LONGITUDE, post.getLongitude());
 
         db.insert(TABLE_NAME, null, values);
         db.close();
@@ -74,25 +80,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 post.setId(cursor.getInt(0));
                 for(int i = 1 ; i < cursor.getColumnCount(); i++){
                     String colName = cursor.getColumnName(i);
-                    String colVal = cursor.getString(i);
                     switch (colName) {
                         case COLUMN_TYPE:
-                            post.setType(colVal);
+                            post.setType(cursor.getString(i));
                             break;
                         case COLUMN_NAME:
-                            post.setName(colVal);
+                            post.setName(cursor.getString(i));
                             break;
                         case COLUMN_PHONE:
-                            post.setPhone(colVal);
+                            post.setPhone(cursor.getString(i));
                             break;
                         case COLUMN_DESCRIPTION:
-                            post.setDescription(colVal);
+                            post.setDescription(cursor.getString(i));
                             break;
                         case COLUMN_DATE:
-                            post.setDate(colVal);
+                            post.setDate(cursor.getString(i));
                             break;
                         case COLUMN_LOCATION:
-                            post.setLocation(colVal);
+                            post.setLocation(cursor.getString(i));
+                            break;
+                        case COLUMN_LATITUDE:
+                            post.setLatitude(cursor.getDouble(i));
+                            break;
+                        case COLUMN_LONGITUDE:
+                            post.setLongitude(cursor.getDouble(i));
                             break;
                     }
                 }
@@ -114,25 +125,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         post.setId(cursor.getInt(0));
         for(int i = 1 ; i < cursor.getColumnCount(); i++){
             String colName = cursor.getColumnName(i);
-            String colVal = cursor.getString(i);
             switch (colName) {
                 case COLUMN_TYPE:
-                    post.setType(colVal);
+                    post.setType(cursor.getString(i));
                     break;
                 case COLUMN_NAME:
-                    post.setName(colVal);
+                    post.setName(cursor.getString(i));
                     break;
                 case COLUMN_PHONE:
-                    post.setPhone(colVal);
+                    post.setPhone(cursor.getString(i));
                     break;
                 case COLUMN_DESCRIPTION:
-                    post.setDescription(colVal);
+                    post.setDescription(cursor.getString(i));
                     break;
                 case COLUMN_DATE:
-                    post.setDate(colVal);
+                    post.setDate(cursor.getString(i));
                     break;
                 case COLUMN_LOCATION:
-                    post.setLocation(colVal);
+                    post.setLocation(cursor.getString(i));
+                    break;
+                case COLUMN_LATITUDE:
+                    post.setLatitude(cursor.getDouble(i));
+                    break;
+                case COLUMN_LONGITUDE:
+                    post.setLongitude(cursor.getDouble(i));
                     break;
             }
         }
@@ -152,6 +168,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DESCRIPTION, post.getDescription());
         values.put(COLUMN_DATE, post.getDate());
         values.put(COLUMN_LOCATION, post.getLocation());
+        values.put(COLUMN_LATITUDE, post.getLatitude());
+        values.put(COLUMN_LONGITUDE, post.getLongitude());
 
         db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(post.getId())});
         db.close();

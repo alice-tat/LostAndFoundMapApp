@@ -2,20 +2,26 @@ package deakin.sit.lostandfoundmapapp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -28,9 +34,11 @@ import deakin.sit.lostandfoundmapapp.databinding.ActivityCreateNewAdvertBinding;
 public class CreateNewAdvertActivity extends FragmentActivity implements OnMapReadyCallback {
     DatabaseHelper dbHelper;
     String selectedType = "";
+    LatLng selectedLatLng = null;
 
     private GoogleMap mMap;
     private ActivityCreateNewAdvertBinding binding;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Register launcher
         ActivityResultLauncher<Intent> startAutoComplete = registerForActivityResult(
@@ -60,6 +69,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                             Toast.makeText(this, "Selected: " + place.getName(), Toast.LENGTH_SHORT).show();
                             binding.inputLocation.setText(place.getName());
+                            selectedLatLng = latLng;
                         }
                     }
                 }
@@ -86,7 +96,26 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
         });
 
         binding.getCurrentLocationButton.setOnClickListener(view -> {
-
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            String msg = "LOCATION: " + location.getLatitude() + "-" + location.getLongitude();
+                            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
         });
 
         binding.saveButton.setOnClickListener(view -> {
@@ -96,16 +125,17 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
             String date = binding.inputDate.getText().toString();
             String location = binding.inputLocation.getText().toString();
 
-            if (selectedType.isEmpty() || name.isEmpty() || phone.isEmpty() || description.isEmpty() || date.isEmpty() || location.isEmpty()) {
+            if (selectedType.isEmpty() || name.isEmpty() || phone.isEmpty() || description.isEmpty() || date.isEmpty() || location.isEmpty() || selectedLatLng==null) {
                 Toast.makeText(this, "Input fields can not be empty", Toast.LENGTH_SHORT);
             } else {
                 // Add advert
-                dbHelper.addPost(new PostDataModel(selectedType, name, phone, description, date, location));
+                dbHelper.addPost(new PostDataModel(selectedType, name, phone, description, date, location, selectedLatLng.latitude, selectedLatLng.longitude));
                 binding.inputName.setText("");
                 binding.inputPhone.setText("");
                 binding.inputDescription.setText("");
                 binding.inputDate.setText("");
                 binding.inputLocation.setText("");
+                selectedLatLng = null;
                 finish();
             }
         });
