@@ -62,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Mark all others
         for (PostDataModel post : postDataModelList) {
             LatLng lat = new LatLng(post.getLatitude(), post.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(lat).title(post.getName() + ": " + post.getLocation()));
+            mMap.addMarker(new MarkerOptions().position(lat).title(post.getType() + ": " + post.getLocation()));
         }
     }
 }

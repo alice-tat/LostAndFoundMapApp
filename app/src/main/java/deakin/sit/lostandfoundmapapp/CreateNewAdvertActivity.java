@@ -11,8 +11,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -31,7 +34,10 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import deakin.sit.lostandfoundmapapp.database.DatabaseHelper;
 import deakin.sit.lostandfoundmapapp.database.PostDataModel;
@@ -44,7 +50,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
 
     private GoogleMap mMap;
     private ActivityCreateNewAdvertBinding binding;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
             return insets;
         });
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Register launcher
         ActivityResultLauncher<Intent> startAutoComplete = registerForActivityResult(
@@ -109,26 +115,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
         });
 
         binding.getCurrentLocationButton.setOnClickListener(view -> {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            fusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            String msg = "LOCATION: " + location.getLatitude() + "-" + location.getLongitude();
-                            Toast.makeText(getBaseContext(), msg, Toast.LENGTH_SHORT);
-                        }
-                    }
-                });
+            getCurrentLocation();
         });
 
         binding.saveButton.setOnClickListener(view -> {
@@ -171,5 +158,49 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
+        }
+    }
+
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Ask for permission
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        Log.d("LOCATION", "Lat: " + latitude + ", Lng: " + longitude);
+
+                        // Get the name
+                        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                        List<Address> addresses = null;
+                        try {
+                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        if (addresses != null && !addresses.isEmpty()) {
+                            String placeName = addresses.get(0).getAddressLine(0);
+                            binding.inputLocation.setText(placeName);
+                        }
+
+                        selectedLatLng = new LatLng(latitude, longitude);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, 10));
+                    }
+                });
     }
 }
