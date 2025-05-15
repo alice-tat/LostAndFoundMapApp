@@ -1,4 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
+package deakin.sit.lostandfoundmapapp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import deakin.sit.lostandfoundmapapp.database.DatabaseHelper;
+import deakin.sit.lostandfoundmapapp.database.PostDataModel;
+import deakin.sit.lostandfoundmapapp.R;
 
 public class PostDetailFragment extends Fragment {
     DatabaseHelper dbHelper;

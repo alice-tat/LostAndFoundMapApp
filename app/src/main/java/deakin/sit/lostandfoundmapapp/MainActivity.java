@@ -10,12 +10,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
+import deakin.sit.lostandfoundmapapp.fragments.AllLostAndFoundFragment;
+import deakin.sit.lostandfoundmapapp.fragments.HomeFragment;
+import deakin.sit.lostandfoundmapapp.fragments.PostDetailFragment;
+
 public class MainActivity extends AppCompatActivity {
     FragmentContainerView fragmentContainerView;
     FragmentManager fragmentManager;
 
     HomeFragment homeFragment;
-    CreateNewAdvertFragment createNewAdvertFragment;
     AllLostAndFoundFragment allLostAndFoundFragment;
     PostDetailFragment postDetailFragment;
 
@@ -32,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
         homeFragment = new HomeFragment();
-        createNewAdvertFragment = new CreateNewAdvertFragment();
         allLostAndFoundFragment = new AllLostAndFoundFragment();
         postDetailFragment = new PostDetailFragment();
 
@@ -43,14 +45,6 @@ public class MainActivity extends AppCompatActivity {
     public void toHomeFragment() {
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, homeFragment)
-                .commit();
-    }
-
-    public void toCreateAdvertFragment() {
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, createNewAdvertFragment)
-                .setReorderingAllowed(true)
-                .addToBackStack(null)
                 .commit();
     }
 

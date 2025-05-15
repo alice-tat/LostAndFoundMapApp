@@ -1,8 +1,12 @@
 package deakin.sit.lostandfoundmapapp;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -29,6 +33,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 
 import java.util.Arrays;
 
+import deakin.sit.lostandfoundmapapp.database.DatabaseHelper;
+import deakin.sit.lostandfoundmapapp.database.PostDataModel;
 import deakin.sit.lostandfoundmapapp.databinding.ActivityCreateNewAdvertBinding;
 
 public class CreateNewAdvertActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -43,7 +49,7 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        EdgeToEdge.enable(this);
         binding = ActivityCreateNewAdvertBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -51,6 +57,13 @@ public class CreateNewAdvertActivity extends FragmentActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Register launcher

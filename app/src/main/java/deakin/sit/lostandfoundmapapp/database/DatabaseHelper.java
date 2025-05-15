@@ -1,4 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
+package deakin.sit.lostandfoundmapapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;

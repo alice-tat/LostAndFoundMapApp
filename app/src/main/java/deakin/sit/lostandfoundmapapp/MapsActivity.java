@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import deakin.sit.lostandfoundmapapp.database.DatabaseHelper;
+import deakin.sit.lostandfoundmapapp.database.PostDataModel;
 import deakin.sit.lostandfoundmapapp.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {

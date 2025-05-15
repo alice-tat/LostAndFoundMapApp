@@ -1,6 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
-
-import com.google.android.gms.maps.model.LatLng;
+package deakin.sit.lostandfoundmapapp.database;
 
 public class PostDataModel {
     private int id;

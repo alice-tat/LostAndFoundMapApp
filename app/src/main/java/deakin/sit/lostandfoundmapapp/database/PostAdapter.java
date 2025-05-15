@@ -1,4 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
+package deakin.sit.lostandfoundmapapp.database;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import deakin.sit.lostandfoundmapapp.MainActivity;
+import deakin.sit.lostandfoundmapapp.R;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     List<PostDataModel> postDataModelList;

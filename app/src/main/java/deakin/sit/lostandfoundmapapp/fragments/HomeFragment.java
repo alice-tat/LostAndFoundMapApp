@@ -1,4 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
+package deakin.sit.lostandfoundmapapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+
+import deakin.sit.lostandfoundmapapp.CreateNewAdvertActivity;
+import deakin.sit.lostandfoundmapapp.MainActivity;
+import deakin.sit.lostandfoundmapapp.MapsActivity;
+import deakin.sit.lostandfoundmapapp.R;
 
 public class HomeFragment extends Fragment {
     Button createAdvertButton, showAllItemButton, showOnMapButton;

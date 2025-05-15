@@ -1,4 +1,4 @@
-package deakin.sit.lostandfoundmapapp;
+package deakin.sit.lostandfoundmapapp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import deakin.sit.lostandfoundmapapp.database.DatabaseHelper;
+import deakin.sit.lostandfoundmapapp.database.PostAdapter;
+import deakin.sit.lostandfoundmapapp.database.PostDataModel;
+import deakin.sit.lostandfoundmapapp.R;
 
 public class AllLostAndFoundFragment extends Fragment {
     RecyclerView recyclerView;

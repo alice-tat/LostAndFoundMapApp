@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CreateNewAdvertActivity"
-    android:layout_margin="20dp"
+    android:gravity = "center"
     android:orientation="vertical">
 
     <TextView
@@ -15,13 +14,15 @@
         android:text="Create Advert"
         android:textAlignment="center"
         android:textSize="38sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_margin="20dp"/>
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,12 +96,14 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_marginHorizontal="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp">
         <Button
             android:id="@+id/getCurrentLocationButton"
             android:layout_width="match_parent"
